@@ -1,37 +1,36 @@
-import React from 'react';
-
+import React, { useState } from 'react';
 import './Form.scss';
 
-class Form extends React.Component {
+const Form = ({ handleApiCall }) => {
+  const [formState, setFormState] = useState({ url: 'https://swapi.dev/api/people', method: 'GET' });
 
-  handleSubmit = e => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormState({ ...formState, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = {
-      method:'GET',
-      url: 'https://pokeapi.co/api/v2/pokemon',
-    };
-    this.props.handleApiCall(formData);
-  }
+    handleApiCall(formState);
+  };
 
-  render() {
-    return (
-      <>
-        <form onSubmit={this.handleSubmit}>
-          <label >
-            <span>URL: </span>
-            <input name='url' type='text' />
-            <button type="submit">GO!</button>
-          </label>
-          <label className="methods">
-            <span id="get">GET</span>
-            <span id="post">POST</span>
-            <span id="put">PUT</span>
-            <span id="delete">DELETE</span>
-          </label>
-        </form>
-      </>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        URL:
+        <input name="url" type="text" onChange={handleChange} />
+      </label>
+      <label>
+        <select name="method" onChange={handleChange}>
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="DELETE">DELETE</option>
+        </select>
+      </label>
+      <button type="submit">GO!</button>
+    </form>
+  );
+};
 
 export default Form;
