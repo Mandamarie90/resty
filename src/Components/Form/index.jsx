@@ -2,33 +2,66 @@ import React, { useState } from 'react';
 import './Form.scss';
 
 const Form = ({ handleApiCall }) => {
-  const [formState, setFormState] = useState({ url: 'https://swapi.dev/api/people', method: 'GET' });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormState({ ...formState, [name]: value });
-  };
+  const [url, setUrl] = useState('');
+  const [method, setMethod] = useState('GET');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleApiCall(formState);
+    handleApiCall({ url, method });
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
         URL:
-        <input name="url" type="text" onChange={handleChange} />
+        <input
+          type="text"
+          name="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
       </label>
       <label>
-        <select name="method" onChange={handleChange}>
-          <option value="GET">GET</option>
-          <option value="POST">POST</option>
-          <option value="PUT">PUT</option>
-          <option value="DELETE">DELETE</option>
-        </select>
+        <input
+          type="radio"
+          name="method"
+          value="GET"
+          checked={method === 'GET'}
+          onChange={(e) => setMethod(e.target.value)}
+        />
+        GET
       </label>
-      <button type="submit">GO!</button>
+      <label>
+        <input
+          type="radio"
+          name="method"
+          value="POST"
+          checked={method === 'POST'}
+          onChange={(e) => setMethod(e.target.value)}
+        />
+        POST
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="method"
+          value="PUT"
+          checked={method === 'PUT'}
+          onChange={(e) => setMethod(e.target.value)}
+        />
+        PUT
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="method"
+          value="DELETE"
+          checked={method === 'DELETE'}
+          onChange={(e) => setMethod(e.target.value)}
+        />
+        DELETE
+      </label>
+      <button type="submit">Go!</button>
     </form>
   );
 };
