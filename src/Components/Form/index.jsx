@@ -1,37 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import './Form.scss';
+const Form = ({ handleApiCall }) => {
+  const [method, setMethod] = useState('get');
+  const [url, setUrl] = useState('');
+  const [body, setBody] = useState('');
 
-class Form extends React.Component {
-
-  handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = {
-      method:'GET',
-      url: 'https://pokeapi.co/api/v2/pokemon',
-    };
-    this.props.handleApiCall(formData);
-  }
+    let requestBody = null;
+    if (method !== 'get' && method !== 'delete') {
+      try {
+        requestBody = JSON.parse(body);
+      } catch (error) {
+        alert('Invalid JSON body');
+        return;
+      }
+    }
+    const requestParams = { method, url, body: requestBody };
+    handleApiCall(requestParams);
+  };
 
-  render() {
-    return (
-      <>
-        <form onSubmit={this.handleSubmit}>
-          <label >
-            <span>URL: </span>
-            <input name='url' type='text' />
-            <button type="submit">GO!</button>
-          </label>
-          <label className="methods">
-            <span id="get">GET</span>
-            <span id="post">POST</span>
-            <span id="put">PUT</span>
-            <span id="delete">DELETE</span>
-          </label>
-        </form>
-      </>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        <span>URL:</span>
+        <input type="text" data-testid="url-input" value={url} onChange={(e) => setUrl(e.target.value)} required />
+      </label>
+      <label>
+        <span>Method:</span>
+        <select value={method} data-testid="method-input" onChange={(e) => setMethod(e.target.value)}>
+          <option value="get" data-testid="get-method-option">GET</option>
+          <option value="post" data-testid="post-method-option">POST</option>
+          <option value="put" data-testid="put-method-option">PUT</option>
+          <option value="delete" data-testid="delete-method-option">DELETE</option>
+        </select>
+      </label>
+      {(method === 'post' || method === 'put') && (
+        <label>
+          <span>Body:</span>
+          <textarea value={body} data-testid="body-input" onChange={(e) => setBody(e.target.value)} />
+        </label>
+      )}
+      <button type="submit" data-testid="fetch-api-button">Send Request</button>
+    </form>
+  );
+};
 
 export default Form;
