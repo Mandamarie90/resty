@@ -1,67 +1,47 @@
 import React, { useState } from 'react';
-import './Form.scss';
 
 const Form = ({ handleApiCall }) => {
+  const [method, setMethod] = useState('get');
   const [url, setUrl] = useState('');
-  const [method, setMethod] = useState('GET');
+  const [body, setBody] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleApiCall({ url, method });
+    let requestBody = null;
+    if (method !== 'get' && method !== 'delete') {
+      try {
+        requestBody = JSON.parse(body);
+      } catch (error) {
+        alert('Invalid JSON body');
+        return;
+      }
+    }
+    const requestParams = { method, url, body: requestBody };
+    handleApiCall(requestParams);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        URL:
-        <input
-          type="text"
-          name="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
+        <span>URL:</span>
+        <input type="text" data-testid="url-input" value={url} onChange={(e) => setUrl(e.target.value)} required />
       </label>
       <label>
-        <input
-          type="radio"
-          name="method"
-          value="GET"
-          checked={method === 'GET'}
-          onChange={(e) => setMethod(e.target.value)}
-        />
-        GET
+        <span>Method:</span>
+        <select value={method} data-testid="method-input" onChange={(e) => setMethod(e.target.value)}>
+          <option value="get" data-testid="get-method-option">GET</option>
+          <option value="post" data-testid="post-method-option">POST</option>
+          <option value="put" data-testid="put-method-option">PUT</option>
+          <option value="delete" data-testid="delete-method-option">DELETE</option>
+        </select>
       </label>
-      <label>
-        <input
-          type="radio"
-          name="method"
-          value="POST"
-          checked={method === 'POST'}
-          onChange={(e) => setMethod(e.target.value)}
-        />
-        POST
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="method"
-          value="PUT"
-          checked={method === 'PUT'}
-          onChange={(e) => setMethod(e.target.value)}
-        />
-        PUT
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="method"
-          value="DELETE"
-          checked={method === 'DELETE'}
-          onChange={(e) => setMethod(e.target.value)}
-        />
-        DELETE
-      </label>
-      <button type="submit">Go!</button>
+      {(method === 'post' || method === 'put') && (
+        <label>
+          <span>Body:</span>
+          <textarea value={body} data-testid="body-input" onChange={(e) => setBody(e.target.value)} />
+        </label>
+      )}
+      <button type="submit" data-testid="fetch-api-button">Send Request</button>
     </form>
   );
 };

@@ -1,24 +1,16 @@
 import React from 'react';
+import ReactJsonPretty from 'react-json-pretty';
+import 'react-json-pretty/themes/monikai.css';
 
-
-const Results = ({ data, loading }) => {
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+const Results = ({ data }) => {
   return (
-    <section>
-      {data ? (
-        <>
-          <h3>Headers</h3>
-          <pre>{JSON.stringify(data.headers, null, 2)}</pre>
-          <h3>Results</h3>
-          <pre>{JSON.stringify(data.results, null, 2)}</pre>
-        </>
-      ) : (
-        <div>No Data</div>
-      )}
-    </section>
+    <div className="results">
+      <h2>Results</h2>
+      {data ? 
+      <div data-testid="json-display"><ReactJsonPretty data={data} /></div>: 
+      <p>No data yet</p>
+      }
+    </div>
   );
 };
 

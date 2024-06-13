@@ -1,14 +1,37 @@
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 1em;
-}
+.Form {
+  margin-bottom: 20px;
 
-label {
-  margin-bottom: 0.5em;
-}
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
 
-input, select, button {
-  margin-left: 0.5em;
+  input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #0b0a0a;
+  }
+
+  .methods {
+    span {
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .active {
+      font-weight: bold;
+    }
+  }
+
+  button[type="submit"] {
+    padding: 8px 20px;
+    background-color: #fbb1eb;
+    color: #060505;
+    border: none;
+    cursor: pointer;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #c20bad;
+  }
 }
